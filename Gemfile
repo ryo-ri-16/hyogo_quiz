@@ -21,7 +21,7 @@ gem "carrierwave"
 
 gem "mini_magick"
 
-gem "mimemagic", "~> 0.3.10"
+gem "mimemagic", "~> 0.4.3"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
