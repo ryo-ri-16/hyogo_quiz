@@ -1,0 +1,80 @@
+<div class="text-center mb-4">
+  <h1>兵庫県市町村クイズへようこそ</h1>
+  <div class="bg-secondary-subtle rounded-xl shadow-md mt-4 p-6 space-y-2">
+    <p>兵庫県は530万の人口を誇り、面積は全国で12番目に大きいです。</p>
+    <p>また、歴史・地理的に地域によってその性質は大きく異なります。</p>
+    <p>そんな兵庫県の市区町村を知ることによってもっと県の魅力を知ることができます。</p>
+  </div>
+</div>
+
+<div class="container mt-6">
+  <h2 class="text-center mb-4">カテゴリーを選んでクイズを始めよう!</h2>
+  <div class="row">
+    <% @categories.each do |category| %>
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card h-100">
+          <div class="card-header text-center category-header category-<%= category.id %>">
+            <h4 class="mb-0"><%= category.name %></h4>
+          </div>
+
+          <div class="card-body">
+            <% if category.description.present? %>
+              <p class="card-text"><%= category.description %></p>
+            <% end %>
+
+            <p class="text-muted">
+              問題数 最大:
+              <strong><%= category.questions.count %>問</strong>
+            </p>
+
+            <%= form_with url: start_questions_path, method: :post, local: true do |f| %>
+              <%= f.hidden_field :category_id, value: category.id %>
+
+              <div class="mb-3">
+                <label class="form-label small">問題数</label>
+                <%= f.number_field :question_count,
+                                    value: [5, category.questions.count].min,
+                                    min: 1,
+                                    max: category.questions.count,
+                                    class: "form-control" %>
+              </div>
+
+              <%= f.submit "スタート", class: "btn btn-outline-primary w-100" %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="row justify-content-center">
+    <!-- 全てのカテゴリー -->
+    <div class="col-md-6 col-lg-4 mb-4">
+      <div class="card h-100 border-primary">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">全ての問題</h4>
+        </div>
+        <div class="card-body">
+          <p class="card-text">
+            <i class="bi bi-collection"></i> 全カテゴリーから出題
+          </p>
+          <p class="text-muted">
+            問題数 最大: <strong><%= Question.count %>問</strong>
+          </p>
+
+          <%= form_with url: start_questions_path, method: :post, local: true do |f| %>
+            <%= f.hidden_field :category_id, value: "" %>
+            <div class="mb-3">
+              <%= f.number_field :question_count,
+                                  value: [10, Question.count].min,
+                                  min: 1,
+                                  max: Question.count,
+                                  class: "form-control" %>
+            </div>
+            <%= f.submit "スタート", class: "btn btn-primary w-100" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      <%= content_for?(:page_title) ? yield(:page_title) : "兵庫県市区町村クイズ" %>
+    </title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="description"
+          content="<%= content_for?(:description) ? yield(:description) : "兵庫県についてもっと詳しくなろう" %>">
+    <meta property="og:title"
+          content="<%= content_for?(:og_title) ? yield(:og_title) : "兵庫県市区町村クイズ" %>">
+    <meta property="og:description"
+          content="<%= content_for?(:og_description) ? yield(:og_description) : "多くの個性的な自治体を知ることで兵庫県の魅力をもっと知ることができます" %>">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://moticheck.onrender.com/">
+    <meta property="og:image" content="<%= image_url("hyogo.jpeg") %>">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= yield %>
+  </body>
+</html>

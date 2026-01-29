@@ -1,0 +1,55 @@
+<div class="container my-5">
+  <!-- 結果サマリー -->
+  <div class="result-summary text-center mb-5">
+    <h2>結果発表</h2>
+
+    <% if @results.any? %>
+      <p class="display-4 fw-bold">
+        <%= @correct_count %> / <%= @total_count %> 問正解!(<%= @score_percent %>%)
+      </p>
+
+      <% @results.each_with_index do |r, index| %>
+        <div class="text-black result-item <%= r[:is_correct] ? 'correct' : 'incorrect' %>">
+          <div class="d-flex justify-content-between align-items-start">
+            <div>
+              <h5 class="mb-1">問題 <%= index + 1 %></h5>
+            </div>
+            <span class="badge <%= r[:is_correct] ? 'bg-success' : 'bg-danger' %>">
+              <%= r[:is_correct] ? '正解' : '不正解' %>
+            </span>
+          </div>
+
+          <p><strong><%= r[:question].title %></strong></p>
+
+          <p class="mt-2 bg-secondary-subtle"><%= r[:question].content %></p>
+
+          <p>
+            あなたの回答：
+            <strong><%= r[:selected_choice].content %></strong>
+          </p>
+
+          <% if r[:is_correct] %>
+            <p class="text-success">⭕ 正解</p>
+          <% else %>
+            <p class="text-danger">❌ 不正解</p>
+            <p>
+              正解：
+              <strong><%= r[:question].choices.find(&:is_correct).content %></strong>
+            </p>
+          <% end %>
+        </div>
+      <% end %>
+    <% else %>
+      <div class="alert alert-warning text-center">
+        <h4>結果データが見つかりませんでした</h4>
+        <p>もう一度お試しください。</p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="text-center my-5">
+    <%= link_to '🔄 トップに戻る', questions_path,
+                method: :post,
+                class: 'btn btn-lg btn-primary' %>
+  </div>
+</div>
