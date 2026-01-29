@@ -3,9 +3,14 @@ Question.destroy_all
 Category.destroy_all
 
 ApplicationRecord.transaction do
-  categories = Category.find_or_initialize_by([
-    { name: '神戸' }, { name: '阪神' }, { name: '播磨' }, { name: '但馬' }, { name: '丹波' }, { name: '淡路' }
-  ])
+  categories = [
+    { slug: "kobe", name: '神戸' },
+    { slug: "hanshin", name: '阪神' },
+    { slug: "harima", name: '播磨' },
+    { slug: "tajima", name: '但馬' },
+    { slug: "tanba", name: '丹波' },
+    { slug: "awaji", name: '淡路' }
+  ]
   questions_data = [
     {
       title: '東灘区',
@@ -597,11 +602,19 @@ ApplicationRecord.transaction do
     }
   ]
 
+  categories.each do |category_data|
+    Category.find_or_create_by!(slug: category_data[:slug]) do |c|
+      c.name = category_data[:name]
+    end
+  end
+
   questions_data.each do |q|
+    category = Category.find_by!(slug: q[:category][:slug])
+
     question = Question.create!(
       title: q[:title],
       content: q[:content],
-      category: q[:category],
+      category: category
     )
 
     q[:choices].each_with_index do |c, index|
@@ -611,6 +624,7 @@ ApplicationRecord.transaction do
         position: index + 1
       )
     end
+
 
     if q[:image_file].present?
       question.image = File.open(

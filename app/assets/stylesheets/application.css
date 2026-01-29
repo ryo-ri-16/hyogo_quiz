@@ -1,26 +1,26 @@
 @import url('https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css');
 
-.category-1 {
+.category-kobe {
   background-color: #40BA8D;
 }
 
-.category-2 {
+.category-hanshin {
   background-color: #FFC107;
 }
 
-.category-3 {
+.category-harima {
   background-color: #DC3545;
 }
 
-.category-4 {
+.category-tajima {
   background-color: #65BBE9;
 }
 
-.category-5 {
+.category-tanba {
   background-color: #9C27B0;
 }
 
-.category-6 {
+.category-awaji {
   background-color: #FF9800;
 }
 
