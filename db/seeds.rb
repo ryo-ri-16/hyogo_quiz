@@ -3,7 +3,7 @@ Question.destroy_all
 Category.destroy_all
 
 ApplicationRecord.transaction do
-  categories = Category.create!([
+  categories = Category.find_or_initialize_by([
     { name: '神戸' }, { name: '阪神' }, { name: '播磨' }, { name: '但馬' }, { name: '丹波' }, { name: '淡路' }
   ])
   questions_data = [
@@ -134,8 +134,8 @@ ApplicationRecord.transaction do
       image_file: '011_伊丹.png',
       choices: [
         { content: '川西', is_correct: false },
-        { content: '尼崎', is_correct: true },
-        { content: '伊丹', is_correct: false },
+        { content: '尼崎', is_correct: false },
+        { content: '伊丹', is_correct: true },
         { content: '宝塚', is_correct: false }
       ]
     },
