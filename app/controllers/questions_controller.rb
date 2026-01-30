@@ -54,6 +54,8 @@ class QuestionsController < ApplicationController
     index = session[:current_question_index]
     question_ids = session[:question_ids]
 
+    session.delete(:answered_index)
+
     # インデックスが範囲外の場合は結果画面へ
     if index >= question_ids.size
       redirect_to result_questions_path and return
@@ -73,53 +75,46 @@ class QuestionsController < ApplicationController
   # 結果処理
   def answer
     if params[:choice_id].blank?
-      flash[:alert] = "選択肢を選んでください"
-      redirect_to play_questions_path and return
+      redirect_to play_questions_path, alert: "選択肢を選んでください" and return
     end
 
-    choice = Choice.find(params[:choice_id])
+    session[:current_question_index] ||= 0
+    session[:answers] ||= []
 
     index = session[:current_question_index]
 
-    # 回答を保存（重要）
-    session[:answers] << {
-      question_id: session[:question_ids][index],
-      choice_id: params[:choice_id],
-      is_correct: choice.is_correct
-    }
+    # 🔒 二重送信防止（ここが決定打）
+    if session[:answered_index] == index
+      redirect_to play_questions_path and return
+    end
 
-    session[:current_question_index] += 1
+    session[:answers] << params[:choice_id].to_i
+
+    session[:answered_index] = index
+    session[:current_question_index] = index + 1
 
     redirect_to play_questions_path
   end
 
   # 結果発表
   def result
-    @answers = session[:answers] || []
+    choice_ids = session[:answers] || []
 
-    @correct_count = @answers.count { |a| a["is_correct"] }
-    @total_count   = @answers.size
+    choices = Choice
+      .includes(:question)
+      .where(id: choice_ids)
+
+    @total_count   = choice_ids.size
+    @correct_count = choices.count(&:is_correct)
     @score_percent = (@correct_count.to_f / @total_count * 100).round
 
-    question_ids = @answers.map { |a| a["question_id"] }
-
-    questions = Question
-      .includes(:choices)
-      .where(id: question_ids)
-      .index_by(&:id)
-
-    @results = @answers.map do |a|
-      question = questions[a["question_id"]]
-      next if question.nil?
-
-      selected_choice = question.choices.find { |c| c.id == a["choice_id"].to_i }
-
+    @results = choices.map do |choice|
       {
-        question: question,
-        selected_choice: selected_choice,
-        is_correct: a["is_correct"]
+        question: choice.question,
+        selected_choice: choice,
+        is_correct: choice.is_correct
       }
-    end.compact
+    end
   end
 
   private

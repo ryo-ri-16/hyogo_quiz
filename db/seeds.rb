@@ -254,7 +254,7 @@ ApplicationRecord.transaction do
     },
     {
       title: '養父市',
-      content: '兵庫県最高峰の氷ノ山があり、スキー樹がある',
+      content: '兵庫県最高峰の氷ノ山があり、スキー場がある',
       category: categories[3],
       image_file: '021_養父.jpeg',
       choices: [

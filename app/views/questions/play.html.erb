@@ -21,7 +21,7 @@
   </div>
 
   <!-- 回答フォーム -->
-  <%= form_with url: answer_questions_path, method: :post, local: true, class: 'answer-form' do |f| %>
+  <%= form_with url: answer_questions_path, method: :post, local: true, data: { turbo: false }, class: 'answer-form' do |f| %>
     <div class="choices-container">
       <% @choices.each_with_index do |choice, index| %>
         <%= f.radio_button :choice_id, choice.id, id: "choice_#{choice.id}", class: 'choice-radio' %>
@@ -33,7 +33,7 @@
     </div>
 
     <div class="submit-wrapper">
-      <%= f.submit '回答する', class: 'btn btn-answer' %>
+      <%= f.submit '回答する', class: 'btn btn-answer', data: { disable_with: "送信中..." } %>
     </div>
   <% end %>
 </div>
