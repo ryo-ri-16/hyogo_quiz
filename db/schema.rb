@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_01_29_114354) do
+ActiveRecord::Schema[8.0].define(version: 2026_01_30_113419) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -44,6 +44,16 @@ ActiveRecord::Schema[8.0].define(version: 2026_01_29_114354) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id"], name: "index_questions_on_category_id"
+  end
+
+  create_table "solid_cache_entries", force: :cascade do |t|
+    t.binary "key_hash", null: false
+    t.binary "value"
+    t.datetime "expires_at"
+    t.integer "shard", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key_hash", "shard"], name: "index_solid_cache_entries_unique", unique: true
   end
 
   add_foreign_key "choices", "questions"
