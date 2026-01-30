@@ -79,6 +79,8 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
+  config.active_record.use_schema_cache_dump = false
+
   config.after_initialize do
     ActiveRecord::Base.connection.schema_cache.clear!
   end
